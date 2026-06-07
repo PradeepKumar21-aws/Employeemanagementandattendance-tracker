@@ -18,7 +18,24 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t employee-app .'
+                sh 'docker build -t employee-attendance-tracker .'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhubcred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+
+                    sh '''
+                    docker login -u $DOCKER_USER -p $DOCKER_PASS
+                    docker tag employee-attendance-tracker pradeep211031/employee-attendance-tracker:latest
+                    docker push pradeep211031/employee-attendance-tracker:latest
+                    '''
+                }
             }
         }
     }
