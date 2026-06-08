@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     stages {
 
         stage('Checkout') {
@@ -31,6 +30,12 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh 'docker build -t employee-attendance-tracker .'
+            }
+        }
+
+        stage('Trivy Scan') {
+            steps {
+                sh 'trivy image employee-attendance-tracker:latest'
             }
         }
 
